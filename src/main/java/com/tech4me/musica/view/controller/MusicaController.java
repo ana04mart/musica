@@ -1,10 +1,11 @@
-package com.tech4me.musica.controller;
+package com.tech4me.musica.view.controller;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.tech4me.musica.model.Musica;
-import com.tech4me.musica.service.MusicaServiceImpl;
+import javax.validation.Valid;
+
+import com.tech4me.musica.service.MusicaServiceImplNew;
 import com.tech4me.musica.shared.MusicaDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,30 +27,30 @@ public class MusicaController {
    
 
     @Autowired
-    MusicaServiceImpl servicoMusica;
+    MusicaServiceImplNew servicoMusica;
 
     @GetMapping
     public ResponseEntity<List<MusicaDTO>> obterTodos(){
         return new ResponseEntity<>(servicoMusica.obterTodos(), HttpStatus.OK);
     } 
 
-    @GetMapping ("/{id}")
+   @GetMapping ("/{id}")
     public ResponseEntity<Optional<MusicaDTO>> obterPorId(@PathVariable String idMusica){
-        Optional<Musica> musicaOptional = servicoMusica.obterPorId(idMusica);
+        Optional<MusicaDTO> musicaOptional = servicoMusica.obterPorId(idMusica);
         
         return new ResponseEntity<> (musicaOptional, HttpStatus.OK);
     }
-
+  
 
     @PostMapping
-    public ResponseEntity<MusicaDTO> adicionar(@RequestBody MusicaDTO musicaDto) {
+    public ResponseEntity<MusicaDTO> adicionar(@RequestBody @Valid MusicaDTO musicaDto) {
         MusicaDTO musicaCadastrada = servicoMusica.adicionar(musicaDto);
 
         return new ResponseEntity<>(musicaCadastrada, HttpStatus.CREATED);
     }
 
     @PutMapping  ("/{id}")
-    public ResponseEntity<MusicaDTO> atualizar(@PathVariable String id, @RequestBody MusicaDTO musicaDto) {
+    public ResponseEntity<MusicaDTO> atualizar(@PathVariable String id, @RequestBody @Valid MusicaDTO musicaDto) {
         MusicaDTO musicaAtualizada = servicoMusica.atualizar(id, musicaDto);
 
         return new ResponseEntity<>(musicaAtualizada, HttpStatus.OK);
